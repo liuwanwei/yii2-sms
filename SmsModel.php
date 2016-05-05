@@ -2,8 +2,6 @@
 
 namespace buddysoft\sms;
 
-use Yii;
-
 /*
  * @property string mobile
  * @property string code

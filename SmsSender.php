@@ -4,7 +4,7 @@ namespace buddysoft\sms;
 
 use buddysoft\sms\SmsModel;
 
-class SmsController{
+class SmsSender{
 	CONST apiurl = "http://yunpian.com/v1/sms/send.json";
 
 	private $apiKey;
