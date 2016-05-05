@@ -19,7 +19,7 @@ class SmsSender{
 	 */
 	
 	public function __construct($apiKey, $validTime){
-		$this->apiKey = $apikey;
+		$this->apiKey = $apiKey;
 		$this->validTime = $validTime;
 	}
 
@@ -83,7 +83,7 @@ class SmsSender{
 		$text="【曦光科技】您的验证码是".$code;
 		$encodedText = urlencode($text);
 		$mobile=urlencode("$mobile");
-		$postString = "apikey=".$this->apikey;
+		$postString = "apikey=".$this->apiKey;
 		$postString .= "&text=".$encodedText;
 		$postString .= "&mobile=".$mobile;
 
