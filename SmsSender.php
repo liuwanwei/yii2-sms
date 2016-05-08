@@ -7,20 +7,34 @@ use buddysoft\sms\SmsModel;
 class SmsSender{
 	CONST apiurl = "http://yunpian.com/v1/sms/send.json";
 
-	private $apiKey;
-	private $validTime;
+	// 从云片网申请的 apikey，必须设置
+	public $apiKey;
 
+	// 在云片网络设置的短信发送模板，必须以【服务名称】开头，包含 #code# 字符串，必须设置
+	public $yunpianTemplate;
+
+	// 验证码记录有效时间，用来区分失效的验证码，单位秒
+	public $validTime = 600;
+	
 	/**
 	 *
-	 * 构造函数，必须通过该构造函数创建对象
-	 * @param string $apkKey 从云片网申请的 apikey
-	 * @param integer $validTime 验证码记录有效时间，用来区分失效的验证码
-	 *
+	 * 设置短信发送模板
+	 * @param string $template 必以【服务名称】开头，包含 #code# 的字符串
+	 * @return boolean true 设置成功，false 设置失败
 	 */
 	
-	public function __construct($apiKey, $validTime){
-		$this->apiKey = $apiKey;
-		$this->validTime = $validTime;
+	public function setTemplate($template){
+		if (false === strstr($template, '#code#')) {
+			return false;
+		}
+
+		// if (empty(preg_match('【.*】', $template))) {
+		// 	return false;
+		// }
+
+		$this->yunpianTemplate = $template;
+
+		return true;
 	}
 
 	/**
@@ -73,6 +87,11 @@ class SmsSender{
 	    return $data;
 	}
 
+	private function makeSms($code){
+		$text = str_replace('#code#', $code, $this->yunpianTemplate);
+		return $text;
+	}
+
 	/**
 	 *
 	 * 组合短信内容和发送参数，发送验证码
@@ -80,13 +99,15 @@ class SmsSender{
 	 */
 	
 	private function directSendSms($mobile, $code){
-		$text="【曦光科技】您的验证码是".$code;
+
+		// $text="【曦光科技】您的验证码是".$code;
+		$text = $this->makeSms($code);
 		$encodedText = urlencode($text);
 		$mobile=urlencode("$mobile");
 		$postString = "apikey=".$this->apiKey;
 		$postString .= "&text=".$encodedText;
 		$postString .= "&mobile=".$mobile;
-
+		
 		return $this->sock_post(self::apiurl, $postString);
 	}
 
@@ -99,7 +120,11 @@ class SmsSender{
 	public function sendCode($mobile){
 
 		if (! is_numeric($mobile) || strlen($mobile) < 11) {
-			return fasle;
+			return false;
+		}
+
+		if (empty($this->yunpianTemplate)) {
+			return false;
 		}
 
 		# 【#company#】您的验证码是#code#
