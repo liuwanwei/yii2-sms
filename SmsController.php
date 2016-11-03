@@ -4,9 +4,12 @@ namespace buddysoft\sms;
 
 use Yii;
 use common\widgets\ApiController;
-// use buddysoft\sms\SmsSender;
 
 class SmsController extends ApiController{
+
+	public $smsKey;
+	public $smsTemplate;
+	public $validTime = null;
 
 	public function actionSend(){
 		$params = $_POST;
@@ -21,23 +24,13 @@ class SmsController extends ApiController{
 			$pseudo = true;
 		}
 
-		if (! isset(Yii::$app->params['yunpian'])) {
-			$this->exitWithError('短信模板不存在');
-		}
-
-		$params = Yii::$app->params['yunpian'];
-		if (! isset($params['key']) || 
-			! isset($params['template'])) {
+		if (empty($this->smsKey) || empty($this->smsTemplate)) {
 			$this->exitWithCode('短信模板配置错误');
 		}
 
-		$key = $params['key'];
-		$template = $params['template'];
-
-		$validTime = 0;
-		if (isset($params['validTime']) && is_integer($params['validTime'])) {
-			$validTime = $params['validTime'];
-		}
+		$key = $this->smsKey;
+		$template = $this->smsTemplate;
+		$validTime = $this->validTime;
 
 		$sender = new SmsSender($key, $validTime);
 		if(false === $sender->setTemplate($template)){
