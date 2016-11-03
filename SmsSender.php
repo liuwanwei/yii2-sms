@@ -15,6 +15,13 @@ class SmsSender{
 
 	// 验证码记录有效时间，用来区分失效的验证码，单位秒
 	public $validTime = 600;
+
+	public function __construct($key, $validTime = null){
+		$this->apiKey = $key;
+		if (! empty($validTime)) {
+			$this->validTime = $validTime;
+		}
+	}
 	
 	/**
 	 *
