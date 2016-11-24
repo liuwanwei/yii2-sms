@@ -3,9 +3,8 @@
 namespace buddysoft\sms;
 
 use Yii;
-use common\widgets\ApiController;
 
-class SmsController extends ApiController{
+class SmsController extends \buddysoft\widget\controllers\ApiController{
 
 	public $smsKey;
 	public $smsTemplate;
