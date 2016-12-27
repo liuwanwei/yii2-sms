@@ -4,6 +4,7 @@ namespace buddysoft\sms\controllers;
 
 use Yii;
 use buddysoft\sms\Module;
+use buddysoft\sms\SmsSender;
 
 class SmsController extends \buddysoft\widget\controllers\ApiController{
 
@@ -22,7 +23,7 @@ class SmsController extends \buddysoft\widget\controllers\ApiController{
 		if (empty($this->smsKey) || empty($this->smsTemplate)) {
 			// 从模块配置中加载
 			$module = Module::getInstance();
-			$settings = $module->defaultSettings;
+			$settings = $module->smsSettings;
 			if (isset($settings['smsKey'])) {
 				$this->smsKey = $settings['smsKey'];
 			}
@@ -38,6 +39,8 @@ class SmsController extends \buddysoft\widget\controllers\ApiController{
 	}
 
 	public function actionSend(){		
+		$this->prepareModuleSetting();
+
 		$params = $_POST;
 
 		if (! isset($params['mobile'])) {
@@ -52,9 +55,7 @@ class SmsController extends \buddysoft\widget\controllers\ApiController{
 
 		if (empty($this->smsKey) || empty($this->smsTemplate)) {
 			$this->exitWithCode('短信模板配置错误');
-		}
-
-		$this->prepareModuleSetting();
+		}		
 
 		$key = $this->smsKey;
 		$template = $this->smsTemplate;

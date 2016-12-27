@@ -4,7 +4,7 @@ namespace buddysoft\sms;
 
 class Module extends \yii\base\Module{
 
-	public $defaultSettings;
+	public $smsSettings;
 
 	public function init(){
 		parent::init();
