@@ -31,9 +31,9 @@ class SmsSender{
 	 */
 	
 	public function setTemplate($template){
-		if (false === strstr($template, '#code#')) {
-			return false;
-		}
+		// if (false === strstr($template, '#code#')) {
+		// 	return false;
+		// }
 
 		// if (empty(preg_match('【.*】', $template))) {
 		// 	return false;
@@ -99,24 +99,34 @@ class SmsSender{
 		return $text;
 	}
 
+	private function sendText($text, $mobile){
+		$text = urlencode($text);
+		$mobile = urlencode($mobile);
+
+		$postString = "apikey=".$this->apiKey;
+		$postString .= "&text=".$text;
+		$postString .= "&mobile=".$mobile;
+
+		return $this->sock_post(self::apiurl, $postString);
+	}
+
 	/**
 	 *
 	 * 组合短信内容和发送参数，发送验证码
 	 *
 	 */
 	
-	private function directSendSms($mobile, $code){
+	// private function directSendSms($mobile, $code){
 
 		// $text="【曦光科技】您的验证码是".$code;
-		$text = $this->makeSms($code);
-		$encodedText = urlencode($text);
-		$mobile=urlencode("$mobile");
-		$postString = "apikey=".$this->apiKey;
-		$postString .= "&text=".$encodedText;
-		$postString .= "&mobile=".$mobile;
+		// $encodedText = urlencode($text);
+		// $mobile=urlencode("$mobile");
+		// $postString = "apikey=".$this->apiKey;
+		// $postString .= "&text=".$encodedText;
+		// $postString .= "&mobile=".$mobile;
 		
-		return $this->sock_post(self::apiurl, $postString);
-	}
+		// return $this->sock_post(self::apiurl, $postString);
+	// }
 
 	/**
 	 *
@@ -136,12 +146,31 @@ class SmsSender{
 
 		# 【#company#】您的验证码是#code#
 		$code = $this->newCode($mobile);
-		$result = $this->directSendSms($mobile, $code);
+		$text = $this->makeSms($code);
+		$result = $this->sendText($text, $mobile);
 
 		$data['code'] = $code;
 		$data['yunpian'] = $result;
 
 		return $data;
+	}
+	
+	/**
+	 *
+	 * 向某个用户发送一条短信，短信模板的变量被 params 数组代替
+	 *
+	 * @param Array $params 参数数组，跟短信模板对应
+	 * @param String $mobile 接收短信手机号
+	 *
+	 */
+	
+	public function sendWithParams($params, $mobile){
+		$text = $this->yunpianTemplate;
+		foreach ($params as $key => $value) {
+			$text = str_replace("#{$key}#", $value, $text);
+		}
+
+		return $this->sendText($text, $mobile);
 	}
 
 	/**
