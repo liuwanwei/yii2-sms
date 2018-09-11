@@ -1,5 +1,6 @@
 {
 	"name": "buddysoft/yii2-sms",
+	"type": "yii2-extension",
 	"description": "A simple API to implement SMS Verification Code by YunPian.com",
 	"homepage": "https://github.com/liuwanwei/sms",
 	"license": "Apache Version 2.0",

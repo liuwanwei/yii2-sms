@@ -46,12 +46,7 @@ class SmsController extends \buddysoft\widget\controllers\ApiController{
 		if (! isset($params['mobile'])) {
 			$this->exitWithInvalidParam();
 		}
-		$mobile = $params['mobile'];
-
-		// 测试模式时，并不真的发短信
-		if (isset($params['pseudo'])) {
-			$pseudo = true;
-		}
+		$mobile = $params['mobile'];		
 
 		if (empty($this->smsKey) || empty($this->smsTemplate)) {
 			$this->exitWithCode('短信模板配置错误');
@@ -66,12 +61,13 @@ class SmsController extends \buddysoft\widget\controllers\ApiController{
 			$this->exitWithInvalidParam('短信模板错误');
 		}
 
-		if (isset($pseudo) && $pseudo === true) {
-			$result = 0;
-		}else{
-			$result = $sender->sendCode($mobile);
+		// 测试模式时，并不真的发短信，但要创建发送记录和验证码
+		if (isset($params['pseudo'])) {
+			$sender->pretendSend = true;
 		}
-		
+
+		$result = $sender->sendCode($mobile);
+
 		$this->exitWithSuccess($result);
 	}
 

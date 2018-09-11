@@ -16,6 +16,10 @@ class SmsSender{
 	// 验证码记录有效时间，用来区分失效的验证码，单位秒
 	public $validTime = 600;
 
+	// 假装发送开关，打开时，并不真正往外发送短信，但返回发送成功消息
+	public $pretendSend = false;
+
+
 	public function __construct($key = null, $validTime = null){
 		$this->apiKey = $key;
 		if (! empty($validTime)) {
@@ -31,16 +35,7 @@ class SmsSender{
 	 */
 	
 	public function setTemplate($template){
-		// if (false === strstr($template, '#code#')) {
-		// 	return false;
-		// }
-
-		// if (empty(preg_match('【.*】', $template))) {
-		// 	return false;
-		// }
-
 		$this->yunpianTemplate = $template;
-
 		return true;
 	}
 
@@ -99,7 +94,7 @@ class SmsSender{
 		return $text;
 	}
 
-	private function sendText($text, $mobile){
+	private function sendText($text, $mobile){		
 		$text = urlencode($text);
 		$mobile = urlencode($mobile);
 
@@ -147,10 +142,15 @@ class SmsSender{
 		# 【#company#】您的验证码是#code#
 		$code = $this->newCode($mobile);
 		$text = $this->makeSms($code);
-		$result = $this->sendText($text, $mobile);
+
+		if ($this->pretendSend === true) {
+			$result = '假装发送开关打开，假装发送';
+		}else{
+			$result = $this->sendText($text, $mobile);
+		}		
 
 		$data['code'] = $code;
-		$data['yunpian'] = $result;
+		$data['result'] = $result;
 
 		return $data;
 	}
@@ -180,7 +180,7 @@ class SmsSender{
 	 * 首先检查该手机最近（10分钟内）是否有验证码记录，有的话，更新记录中的验证码，否则创建新的记录。
 	 */
 	
-	private function newCode($mobile){
+	private function newCode($mobile){				
 		$timeString = $this->validBeginTime();
 
 		$objects = SmsModel::find()
@@ -203,7 +203,10 @@ class SmsSender{
 		}
 
 		$model->code = $code;
-		$model->save();
+		if (! $model->save()) {
+			// 保存新的验证码记录失败
+			return null;
+		};
 
 		return $code;
 	}
@@ -229,7 +232,6 @@ class SmsSender{
 			return true;
 		}
 	}
-	
 }
 
 ?>
