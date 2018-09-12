@@ -1,8 +1,8 @@
 <?php
 
-namespace buddysoft\sms;
+namespace buddysoft\sms\utils;
 
-use buddysoft\sms\SmsModel;
+use buddysoft\sms\models\SmsModel;
 
 class SmsSender{
 	CONST apiurl = "http://yunpian.com/v1/sms/send.json";
@@ -105,30 +105,12 @@ class SmsSender{
 		return $this->sock_post(self::apiurl, $postString);
 	}
 
-	/**
-	 *
-	 * 组合短信内容和发送参数，发送验证码
-	 *
-	 */
-	
-	// private function directSendSms($mobile, $code){
-
-		// $text="【曦光科技】您的验证码是".$code;
-		// $encodedText = urlencode($text);
-		// $mobile=urlencode("$mobile");
-		// $postString = "apikey=".$this->apiKey;
-		// $postString .= "&text=".$encodedText;
-		// $postString .= "&mobile=".$mobile;
-		
-		// return $this->sock_post(self::apiurl, $postString);
-	// }
 
 	/**
 	 *
 	 * 发送验证码外部服务接口
 	 *
-	 */
-	
+	 */	
 	public function sendCode($mobile){
 
 		if (! is_numeric($mobile) || strlen($mobile) < 11) {

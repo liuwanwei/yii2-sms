@@ -4,7 +4,7 @@ namespace buddysoft\sms\controllers;
 
 use Yii;
 use buddysoft\sms\Module;
-use buddysoft\sms\SmsSender;
+use buddysoft\sms\utils\SmsSender;
 
 class SmsController extends \buddysoft\widget\controllers\ApiController{
 
@@ -46,7 +46,7 @@ class SmsController extends \buddysoft\widget\controllers\ApiController{
 		if (! isset($params['mobile'])) {
 			$this->exitWithInvalidParam();
 		}
-		$mobile = $params['mobile'];		
+		$mobile = $params['mobile'];
 
 		if (empty($this->smsKey) || empty($this->smsTemplate)) {
 			$this->exitWithCode('短信模板配置错误');
