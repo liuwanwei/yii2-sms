@@ -12,13 +12,32 @@ composer require buddysoft/yii2-sms dev-master
 
 在 main.php 数组根目录下（跟 components 同级）添加类似配置：
 
-"""
+```
 'controllerMap' => [
     // 短信验证，需要 composer require buddysoft/yii2-sms "~1.0.4"
     'sms' => [
         'class' => 'buddysoft\sms\controllers\SmsController',
         'smsKey' => '6f32f42e37100d',
         'smsTemplate' => '【购物助手】您的验证码为：#code#，请在10分钟内完成验证。如非本人操作，请忽略。',
+        'enableCsrfValidation' => false,
     ],
 ],
-"""
+```
+
+## 使用
+
+**发短信：**
+
+- 类型：POST
+- 地址：/sms/send
+- 参数：mobile, pseudo
+
+**验证短信：**
+
+- 类型：POST
+- 地址：/sms/verify
+- 参数：mobile, code
+
+
+
+
