@@ -126,13 +126,14 @@ class SmsSender{
 		$text = $this->makeSms($code);
 
 		if ($this->pretendSend === true) {
-			$result = '假装发送开关打开，假装发送';
+			$data['result'] = 'pseudo 开关打开，假装发送';
+			// 模拟发送时，将实际生成的验证码返回给请求者
+      $data['code'] = $code;
 		}else{
 			$result = $this->sendText($text, $mobile);
+      $data['result'] = $result;
 		}		
-
-		$data['code'] = $code;
-		$data['result'] = $result;
+		
 
 		return $data;
 	}

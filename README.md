@@ -32,6 +32,10 @@ composer require buddysoft/yii2-sms dev-master
 - 地址：/sms/send
 - 参数：mobile, pseudo
 
+支持 pseudo 选项，并不真正调用短信发送服务，但会将生成的验证码返回给请求者。
+
+**v1.1.3：要打开 pseudo 选项，必须配置 Yii::$app->params['pseudoSms'] 参数。**
+
 **验证短信：**
 
 - 类型：POST
