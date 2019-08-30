@@ -123,8 +123,6 @@ class SmsController extends \buddysoft\widget\controllers\ApiController
     $mobile = $params['mobile'];
     $code = $params['code'];
 
-    $mobile = PseudoConverter::convert($mobile, $this->pseudos);
-
     $sender = new SmsSender();
     $result = $sender->verify($mobile, $code);
     if ($result === true) {
