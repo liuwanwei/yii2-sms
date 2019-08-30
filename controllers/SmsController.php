@@ -33,6 +33,7 @@ class SmsController extends \buddysoft\widget\controllers\ApiController
    *      ],
    *    ] 
    * ],
+   * 或者将 pseudos 配置加入 common\config\params.php，这样可以在其它模块（如 console ）中控制对假用户的操作。
    * 
    * 测试时，手机号填写 fakeNumber，Sms 模块经过比对后，会将短信发往 sendNumber，但 sms 表内保存的还是 fakeNumber.
    * 总的来说，除了最终发送的号码会被替换之外，其它流程都不变。
