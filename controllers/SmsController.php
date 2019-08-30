@@ -93,7 +93,7 @@ class SmsController extends \buddysoft\widget\controllers\ApiController
       $this->exitWithInvalidParam('短信模板错误');
     }
     
-    // 引入 pseudoNumber，默认就是用户传来的手机号
+    // 引入 pseudoNumber，未设置时默认为用户传来的手机号，不影响正常流程
     $sendNumber = $mobile;
 
     // 测试模式时，并不真的发短信，但要创建发送记录和验证码
@@ -112,6 +112,14 @@ class SmsController extends \buddysoft\widget\controllers\ApiController
     $this->exitWithSuccess($result);
   }
 
+  /**
+   * 判断验证码是否正确
+   * 
+   * @param string $_POST['mobile']
+   * @param string $_POST['code']
+   *
+   * @return void
+   */
   public function actionVerify()
   {
     $params = $_POST;
