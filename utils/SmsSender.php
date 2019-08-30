@@ -109,9 +109,12 @@ class SmsSender{
 	/**
 	 *
 	 * 发送验证码外部服务接口
+	 * 
+	 * @param string $mobile 				实际要发送给验证码的手机号
+	 * @param string $recordNumber 	保存在发送记录表中的手机号
 	 *
 	 */	
-	public function sendCode($mobile){
+	public function sendCode($mobile, $recordNumber){
 
 		if (! is_numeric($mobile) || strlen($mobile) < 11) {
 			return false;
@@ -121,8 +124,10 @@ class SmsSender{
 			return false;
 		}
 
-		# 【#company#】您的验证码是#code#
-		$code = $this->newCode($mobile);
+		// 生成验证码和验证码发送记录
+		$code = $this->newCode($recordNumber);
+
+		// 生成验证码内容
 		$text = $this->makeSms($code);
 
 		if ($this->pretendSend === true) {
@@ -130,6 +135,7 @@ class SmsSender{
 			// 模拟发送时，将实际生成的验证码返回给请求者
       $data['code'] = $code;
 		}else{
+			// 实际发送的对象
 			$result = $this->sendText($text, $mobile);
       $data['result'] = $result;
 		}		
@@ -158,7 +164,7 @@ class SmsSender{
 
 	/**
 	 *
-	 * 针对某个手机号生成新的验证码
+	 * 针对某个手机号生成新的验证码，并创建（或更新）验证码发送记录
 	 *
 	 * 首先检查该手机最近（10分钟内）是否有验证码记录，有的话，更新记录中的验证码，否则创建新的记录。
 	 */
@@ -197,8 +203,10 @@ class SmsSender{
 	/**
 	 *
 	 * 验证『验证码』是否正确
-	 *
 	 * 只针对最近（10分钟内）的记录进行验证
+	 * 
+	 * @param string $mobile 需要从验证码记录中查找的手机号
+	 * @param string $code   验证码
 	 */
 	
 	public function verify($mobile, $code){
