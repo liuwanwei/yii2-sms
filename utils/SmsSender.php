@@ -214,7 +214,7 @@ class SmsSender{
 
 		$model = SmsModel::find()
 			->where(['mobile' => $mobile, 'code' => $code])
-			->andWhere(['>', 'createdAt', $timeString])
+			->andWhere(['>', 'updatedAt', $timeString])
 			->one();
 
 		if (empty($model)) {
