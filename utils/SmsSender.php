@@ -110,7 +110,7 @@ class SmsSender{
 	 *
 	 * 发送验证码外部服务接口
 	 * 
-	 * @param string $mobile 				实际要发送给验证码的手机号
+	 * @param string $mobile 		实际要发送给验证码的手机号
 	 * @param string $recordNumber 	保存在发送记录表中的手机号
 	 *
 	 */	
@@ -133,11 +133,11 @@ class SmsSender{
 		if ($this->pretendSend === true) {
 			$data['result'] = 'pseudo 开关打开，假装发送';
 			// 模拟发送时，将实际生成的验证码返回给请求者
-      $data['code'] = $code;
+      		$data['code'] = $code;
 		}else{
 			// 实际发送的对象
 			$result = $this->sendText($text, $mobile);
-      $data['result'] = $result;
+      		$data['result'] = $result;
 		}		
 		
 
