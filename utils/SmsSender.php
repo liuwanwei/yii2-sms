@@ -5,14 +5,15 @@ namespace buddysoft\sms\utils;
 use buddysoft\sms\models\SmsModel;
 
 class SmsSender{
-	CONST apiurl = "http://yunpian.com/v1/sms/send.json";
+	// CONST apiurl = "http://yunpian.com/v1/sms/send.json";
 
 	/**
 	 * 发送短信服务器域名
+	 * 2021/10/28 修改到 v2 https 版
 	 *
 	 * @var string 使用属性代替原先的常量，这样外部可以修改
 	 */
-	public $apiUrl = "http://yunpian.com/v1/sms/send.json";
+	public $apiUrl = 'https://sms.yunpian.com/v2/sms/single_send.json';
 
 	// 从云片网申请的 apikey，必须设置
 	public $apiKey;
