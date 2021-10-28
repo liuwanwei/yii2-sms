@@ -138,7 +138,11 @@ class SmsController extends \buddysoft\widget\controllers\ApiController
 
     $result = $sender->sendCode($sendNumber, $mobile);
 
-    $this->exitWithSuccess($result);
+    if ($result['result'] === true) {
+      $this->exitWithSuccess($result);
+    }else{
+      $this->exitWithErrorData("发送失败", $result);
+    }
   }
 
   /**

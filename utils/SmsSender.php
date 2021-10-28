@@ -7,6 +7,13 @@ use buddysoft\sms\models\SmsModel;
 class SmsSender{
 	CONST apiurl = "http://yunpian.com/v1/sms/send.json";
 
+	/**
+	 * 发送短信服务器域名
+	 *
+	 * @var string 使用属性代替原先的常量，这样外部可以修改
+	 */
+	public $apiUrl = "http://yunpian.com/v1/sms/send.json";
+
 	// 从云片网申请的 apikey，必须设置
 	public $apiKey;
 
@@ -103,26 +110,30 @@ class SmsSender{
 		$postString .= "&text=".$text;
 		$postString .= "&mobile=".$mobile;
 
-		return $this->sock_post(self::apiurl, $postString);
+		return $this->sock_post($this->apiUrl, $postString);
 	}
 
 
 	/**
-	 *
 	 * 发送验证码外部服务接口
 	 * 
 	 * @param string $mobile 		实际要发送给验证码的手机号
 	 * @param string $recordNumber 	保存在发送记录表中的手机号
 	 *
+	 * @return array [
+	 * 		"result" => true|false, 
+	 * 		"code" => "验证码，只在 fake 发送时有效", 
+	 * 		"info" => "一般发送失败时存储云片服务器的反馈信息"
+	 * ]
 	 */	
 	public function sendCode($mobile, $recordNumber){
 
 		if (! is_numeric($mobile) || strlen($mobile) < 11) {
-			return false;
+			return ['result' => false];
 		}
 
 		if (empty($this->yunpianTemplate)) {
-			return false;
+			return ['result => false'];
 		}
 
 		// 生成验证码和验证码发送记录
@@ -132,18 +143,31 @@ class SmsSender{
 		$text = $this->makeSms($code);
 
 		if ($this->pretendSend === true) {
-			$data['result'] = 'pseudo 开关打开，假装发送';
 			// 模拟发送时，将实际生成的验证码返回给请求者
-      		$data['code'] = $code;
+			return [
+				'result' => true,
+				'code' => $code,
+				'info' => 'pseudo 开关打开，假装发送'
+			];
+
 		}else{
 			// 实际发送的对象
-			$result = $this->sendText($text, $mobile);
-      		$data['result'] = $result;
-		}		
-		
-
-		return $data;
+			$data = $this->sendText($text, $mobile);
+			$decoded = json_decode($data, true);
+			$code = $decoded['code'] ?? -1;
+			if ($code != 0) {
+				return [
+					'result' => false,
+					'info' => $decoded
+				];
+			}else{
+				return [
+					'result' => true,
+				];
+			}
+		}
 	}
+
 	
 	/**
 	 *
