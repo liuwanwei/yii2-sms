@@ -134,7 +134,7 @@ class SmsSender{
 		}
 
 		if (empty($this->yunpianTemplate)) {
-			return ['result => false'];
+			return ['result' => false];
 		}
 
 		// 生成验证码和验证码发送记录
