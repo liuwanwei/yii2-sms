@@ -131,17 +131,10 @@ class SmsSender{
 
 		if (! is_numeric($mobile) || strlen($mobile) < 11) {
 			return ['result' => false];
-		}
-
-		if (empty($this->yunpianTemplate)) {
-			return ['result' => false];
-		}
+		}		
 
 		// 生成验证码和验证码发送记录
-		$code = $this->newCode($recordNumber);
-
-		// 生成验证码内容
-		$text = $this->makeSms($code);
+		$code = $this->newCode($recordNumber);		
 
 		if ($this->pretendSend === true) {
 			// 模拟发送时，将实际生成的验证码返回给请求者
@@ -151,21 +144,28 @@ class SmsSender{
 				'info' => 'pseudo 开关打开，假装发送'
 			];
 
+		}
+
+		if (empty($this->yunpianTemplate)) {
+			return ['result' => false];
+		}
+
+		// 生成验证码内容
+		$text = $this->makeSms($code);
+
+		// 实际发送的对象
+		$data = $this->sendText($text, $mobile);
+		$decoded = json_decode($data, true);
+		$code = $decoded['code'] ?? -1;
+		if ($code != 0) {
+			return [
+				'result' => false,
+				'info' => $decoded
+			];
 		}else{
-			// 实际发送的对象
-			$data = $this->sendText($text, $mobile);
-			$decoded = json_decode($data, true);
-			$code = $decoded['code'] ?? -1;
-			if ($code != 0) {
-				return [
-					'result' => false,
-					'info' => $decoded
-				];
-			}else{
-				return [
-					'result' => true,
-				];
-			}
+			return [
+				'result' => true,
+			];
 		}
 	}
 
