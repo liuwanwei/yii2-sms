@@ -24,8 +24,9 @@ namespace buddysoft\sms\controllers;
 use Yii;
 use buddysoft\sms\Module;
 use buddysoft\sms\utils\SmsSender;
+use bytefly\yii2api\controllers\AntiqueApiController;
 
-class SmsController extends \buddysoft\widget\controllers\ApiController
+class SmsController extends AntiqueApiController
 {
 
   public $smsKey;

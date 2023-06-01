@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "db2108c6c02bfd3379827bc5a88a93e7",
+    "content-hash": "b7255f355544141378818cf458455a86",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -80,6 +80,40 @@
             "license": [
                 "MIT"
             ]
+        },
+        {
+            "name": "bytefly/yii2api",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://gitee.com/buddysoft/yii2api.git",
+                "reference": "e8f65e4fa0df4e256d1d42cddfb4c9846d02880c"
+            },
+            "require": {
+                "php": ">=5.6.15",
+                "yiisoft/yii2": "~2.0.14"
+            },
+            "default-branch": true,
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "bytefly\\yii2api\\": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "liuwanwei",
+                    "email": "liuwanwei@gmail.com",
+                    "homepage": "https://weibo.com/iHarbor",
+                    "role": "developer"
+                }
+            ],
+            "description": "Commonly used API interfaces",
+            "homepage": "https://gitee.com/buddysoft/yii2api",
+            "time": "2023-06-01T14:35:37+00:00"
         },
         {
             "name": "cebe/markdown",
@@ -488,12 +522,14 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "bytefly/yii2api": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.6.15"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }
